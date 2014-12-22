@@ -49,6 +49,8 @@
                 libraryNativeFolderPathOut="project.library.native.folder.path"
                 jarLibraryPathOut="project.all.jars.path"
                 targetApi="${project.target.apilevel}"
+                buildToolsFolder="${android.build.tools.dir}"
+                renderscriptSupportLibsOut="project.rs.support.libs.path"
                 verbose="${verbose}" />
 
     </target>
