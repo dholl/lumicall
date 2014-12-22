@@ -49,6 +49,33 @@ public class ViaHeader extends ParametricHeader {
 	protected static final String maddr_param = "maddr";
 	protected static final String ttl_param = "ttl";
 
+	protected static String sanitize_ipv6_host(String host) {
+		// If host has a [ in it, then it must be at the front,
+		// and host must end with ].
+		if(host.startsWith("[")) {
+			if(!host.endsWith("]")) {
+				throw new RuntimeException("host starts with [ but does not end with ] -- " + host);
+			}
+			// Assume this is an IPv6 wrapped in [ ], and just return it.
+			return host;
+		}
+		// Otherwise, [ ] are NOT allowed anywhere else:
+		if(host.indexOf('[') >= 0) {
+			throw new RuntimeException("host contains stray [ -- " + host);
+		}
+		if(host.indexOf(']') >= 0) {
+			throw new RuntimeException("host contains stray ] -- " + host);
+		}
+		// If host contains a :, then pretend it is an IPv6 address and wrap it in [ ]...
+		if(host.indexOf(':') >= 0) {
+			int zoneIndex = host.indexOf('%');
+			if(zoneIndex < 0)
+				zoneIndex = host.length();
+			host = '[' + host.substring(0, zoneIndex) + ']';
+		}
+		return host;
+	}
+
 	// public ViaHeader()
 	// { super(SipHeaders.Via);
 	// }
@@ -62,23 +89,23 @@ public class ViaHeader extends ParametricHeader {
 	}
 
 	public ViaHeader(String host, int port) {
-		super(SipHeaders.Via, "SIP/2.0/UDP " + host + ":" + port);
+		super(SipHeaders.Via, "SIP/2.0/UDP " + sanitize_ipv6_host(host) + ":" + port);
 	}
 
 	/*
 	 * public ViaHeader(String host, int port, String branch) {
-	 * super(SipHeaders.Via,"SIP/2.0/UDP "+host+":"+port+";branch="+branch); }
+	 * super(SipHeaders.Via,"SIP/2.0/UDP "+sanitize_ipv6_host(host)+":"+port+";branch="+branch); }
 	 */
 
 	public ViaHeader(String proto, String host, int port) {
-		super(SipHeaders.Via, "SIP/2.0/" + proto.toUpperCase() + " " + host
+		super(SipHeaders.Via, "SIP/2.0/" + proto.toUpperCase() + " " + sanitize_ipv6_host(host)
 				+ ":" + port); // modified
 	}
 
 	/*
 	 * public ViaHeader(String proto, String host, int port, String branch) {
 	 * super(SipHeaders.Via,"SIP/2.0/"+proto.toUpperCase()+"
-	 * "+host+":"+port+";branch="+branch); }
+	 * "+sanitize_ipv6_host(host)+":"+port+";branch="+branch); }
 	 */
 
 	/** Gets the transport protocol */
