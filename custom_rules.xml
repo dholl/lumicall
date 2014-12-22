@@ -39,21 +39,6 @@
       <subant buildpath="${opentelecoms.org-zrtp.absolute.dir}" antfile="build.xml"/>
       <copy file="${opentelecoms.org-zrtp.absolute.dir}/opentelecoms.org-zrtp.jar" todir="${jar.libs.absolute.dir}"/>
 
-        <dependency
-                libraryFolderPathOut="project.library.folder.path"
-                libraryPackagesOut="project.library.packages"
-                libraryManifestFilePathOut="project.library.manifest.file.path"
-                libraryResFolderPathOut="project.library.res.folder.path"
-                libraryBinAidlFolderPathOut="project.library.bin.aidl.folder.path"
-                libraryRFilePathOut="project.library.bin.r.file.path"
-                libraryNativeFolderPathOut="project.library.native.folder.path"
-                jarLibraryPathOut="project.all.jars.path"
-                targetApi="${project.target.apilevel}"
-                renderscriptSupportMode="${renderscript.support.mode}"
-                buildToolsFolder="${android.build.tools.dir}"
-                renderscriptSupportLibsOut="project.rs.support.libs.path"
-                verbose="${verbose}" />
-
     </target>
 
 </project>
